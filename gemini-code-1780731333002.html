@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun PARTNER KERJA!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for surprise button -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pink-pastel': '#FFC0CB',
+                        'pink-hot': '#FF69B4',
+                        'dark-bg': '#121212',
+                        'off-white': '#F8F8FF'
+                    },
+                    fontFamily: {
+                        'cursive': ['"Dancing Script"', 'cursive'],
+                        'sans': ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 2s ease-in-out',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #121212; /* Black theme */
+            color: #F8F8FF; /* White text */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF69B4; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFC0CB; 
+        }
+
+        /* Envelope Animation Styles */
+        .envelope-wrapper {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: #FFC0CB; /* Pastel Pink */
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+            margin: 0 auto;
+        }
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #FF69B4; /* Hot Pink */
+            transform-origin: top;
+            transition: transform 0.5s ease;
+            z-index: 3;
+        }
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 100px solid #e5a8b4;
+            z-index: 2;
+        }
+        .letter {
+            position: absolute;
+            bottom: 10px;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background-color: #fff;
+            color: #121212;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.8s ease, z-index 0s 0.4s;
+            z-index: 1;
+            text-align: center;
+            overflow-y: auto;
+        }
+        
+        /* Open state for envelope */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+        }
+        .envelope-wrapper.open .letter {
+            transform: translateY(-120px);
+            z-index: 4;
+            transition: transform 0.8s ease 0.3s, z-index 0s 0.3s;
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 192, 203, 0.2);
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-card border-b-0 py-4 px-6 md:px-12 flex justify-between items-center transition-all duration-300" id="navbar">
+        <div class="text-pink-hot font-cursive text-2xl font-bold tracking-wider">
+            Happy Birthday <i class="fas fa-gift text-sm animate-bounce text-pink-pastel ml-1"></i>
+        </div>
+        <div class="space-x-4 hidden md:block">
+            <a href="#beranda" class="text-off-white hover:text-pink-hot transition">Beranda</a>
+            <a href="#memori" class="text-off-white hover:text-pink-hot transition">Memori</a>
+            <a href="#pesan" class="text-off-white hover:text-pink-hot transition">Pesan</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="min-h-screen flex flex-col justify-center items-center relative overflow-hidden px-4">
+        <!-- Decorative background elements -->
+        <div class="absolute top-20 left-10 w-32 h-32 bg-pink-hot rounded-full mix-blend-screen filter blur-[80px] opacity-30 animate-pulse-slow"></div>
+        <div class="absolute bottom-20 right-10 w-40 h-40 bg-pink-pastel rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-pulse-slow" style="animation-delay: 2s;"></div>
+        
+        <div class="text-center z-10 animate-fade-in">
+            <h2 class="text-xl md:text-2xl text-pink-pastel mb-2 font-light uppercase tracking-widest">Hari Spesialmu</h2>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-cursive text-white mb-6 drop-shadow-lg">
+                Selamat Ulang Tahun <span class="text-pink-hot">Haru Kibi</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
+                Selamat bertambah umur! Semoga hari ini jadi awal dari tahun yang luar biasa buat kamu.
+            </p>
+            <a href="#memori" class="inline-block bg-pink-hot hover:bg-pink-pastel text-dark-bg font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(255,105,180,0.5)]">
+                Lihat ke Bawah <i class="fas fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+
+        <!-- Floating icon animation -->
+        <div class="absolute bottom-10 animate-bounce-slow">
+            <i class="fas fa-star text-pink-pastel text-2xl opacity-70"></i>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="memori" class="py-20 px-6 md:px-12 bg-dark-bg relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-cursive text-pink-pastel mb-4">Throwback Momen</h2>
+                <div class="w-24 h-1 bg-pink-hot mx-auto rounded-full"></div>
+                <p class="mt-4 text-gray-400">Beberapa jepretan random pas kita lagi bareng.</p>
+            </div>
+
+            <!-- Grid Layout for Photos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card overflow-hidden group rounded-xl p-3 transform transition duration-500 hover:-translate-y-2">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="Screenshot_19.png" alt="Memori 1" class="w-full h-64 object-cover transform transition duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <p class="text-white font-cursive text-2xl">Haru</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card overflow-hidden group rounded-xl p-3 transform transition duration-500 hover:-translate-y-2 lg:translate-y-8">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="Screenshot_21.png" alt="Memori 2" class="w-full h-64 object-cover transform transition duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <p class="text-white font-cursive text-2xl">Kibi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card overflow-hidden group rounded-xl p-3 transform transition duration-500 hover:-translate-y-2">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="Screenshot_20.png" alt="Memori 3" class="w-full h-64 object-cover transform transition duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <p class="text-white font-cursive text-2xl">Birthday Girl</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Message Section -->
+    <section id="pesan" class="py-24 px-4 bg-gradient-to-b from-dark-bg to-black relative overflow-hidden">
+        <!-- Floating shapes -->
+        <div class="absolute top-1/4 left-10 w-16 h-16 border-2 border-pink-hot rounded-full animate-float opacity-20"></div>
+        <div class="absolute bottom-1/4 right-20 w-24 h-24 border border-pink-pastel transform rotate-45 animate-float opacity-20" style="animation-delay: 1s;"></div>
+
+        <div class="max-w-3xl mx-auto text-center z-10 relative">
+            <h2 class="text-4xl md:text-5xl font-cursive text-pink-pastel mb-6">Surat Kecil</h2>
+            <p class="text-gray-400 mb-12">Ketuk amplop di bawah ini buat buka pesannya.</p>
+
+            <!-- Interactive Envelope -->
+            <div class="envelope-wrapper mb-24" id="envelopeWrapper" onclick="toggleEnvelope()">
+                <div class="envelope">
+                    <div class="flap"></div>
+                    <div class="envelope-front"></div>
+                    <!-- The Letter Content -->
+                    <div class="letter">
+                        <h3 class="font-cursive text-xl text-pink-hot mb-2">Halo!</h3>
+                        <p class="font-sans text-sm text-gray-800 leading-relaxed text-left mb-2">
+                            Selamat ulang tahun ya! 🎉
+                            Semoga di umur yang baru ini, kamu makin dewasa dan segalanya makin lancar.
+                        </p>
+                        <p class="font-sans text-sm text-gray-800 leading-relaxed text-left mb-2">
+                            Pokoknya doa terbaik buat kamu. Semoga apa yang kamu kejar tahun ini bisa pada kecapai semua. Semangat terus!
+                        </p>
+                        <p class="font-sans text-sm font-bold text-pink-hot text-right mt-4">
+                            Cheers,<br>
+                            - PARTNER KERJA KAMU -
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-8 text-sm text-gray-500 animate-pulse" id="clickInstruction">Klik Amplopnya!</div>
+            </div>
+
+            <!-- Surprise Button -->
+            <div class="mt-16">
+                <p class="text-gray-300 mb-4">Masih ada satu lagi...</p>
+                <button id="surpriseBtn" onclick="triggerSurprise()" class="relative overflow-hidden group bg-transparent border-2 border-pink-hot text-pink-hot font-bold py-4 px-10 rounded-full transition-all duration-300 hover:text-white">
+                    <span class="absolute inset-0 bg-pink-hot w-0 group-hover:w-full transition-all duration-300 ease-out z-0"></span>
+                    <span class="relative z-10 flex items-center justify-center">
+                        <i class="fas fa-gift mr-2"></i> Tekan Aku!
+                    </span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Audio Player -->
+    <!-- Pastikan Anda memiliki file mp3 bernama 'you-belong-with-me.mp3' di folder yang sama -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="One Direction - Little Things (Lyric Video) - OneDirectionVEVO.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <!-- Floating Music Controls -->
+    <div class="fixed bottom-6 left-6 z-50 glass-card p-3 flex flex-col gap-2 items-center shadow-lg border border-pink-pastel/30">
+        <i class="fas fa-music text-pink-hot text-xs mb-1 animate-bounce"></i>
+        
+        <!-- Volume Up -->
+        <button onclick="volumeUp()" class="w-8 h-8 bg-dark-bg text-pink-pastel rounded-full hover:bg-pink-hot hover:text-white transition duration-300 shadow text-sm" title="Besarkan Volume">
+            <i class="fas fa-volume-up"></i>
+        </button>
+        
+        <!-- Volume Down -->
+        <button onclick="volumeDown()" class="w-8 h-8 bg-dark-bg text-pink-pastel rounded-full hover:bg-pink-hot hover:text-white transition duration-300 shadow text-sm" title="Kecilkan Volume">
+            <i class="fas fa-volume-down"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center border-t border-gray-800 bg-black">
+        <p class="text-gray-500 font-sans text-sm">
+            Dibuat dengan <i class="fas fa-heart text-pink-hot animate-pulse mx-1"></i> khusus untukmu.
+        </p>
+    </footer>
+
+    <script>
+        // --- MUSIC CONTROLS SCRIPT ---
+        const bgMusic = document.getElementById('bgMusic');
+        
+        // Mengatur volume awal di 50%
+        bgMusic.volume = 0.5;
+
+        // Fungsi membesarkan volume (maksimal 1.0)
+        function volumeUp() {
+            if (bgMusic.volume < 0.9) {
+                bgMusic.volume += 0.1;
+            } else {
+                bgMusic.volume = 1.0;
+            }
+        }
+
+        // Fungsi mengecilkan volume (minimal 0.0)
+        function volumeDown() {
+            if (bgMusic.volume > 0.1) {
+                bgMusic.volume -= 0.1;
+            } else {
+                bgMusic.volume = 0.0;
+            }
+        }
+
+        // Trik untuk mengatasi pemblokiran Autoplay oleh Browser
+        // Lagu akan otomatis terputar begitu pengunjung menyentuh/klik layar
+        document.body.addEventListener('click', function() {
+            if (bgMusic.paused) {
+                bgMusic.play().catch(error => console.log("Autoplay dicegah oleh browser."));
+            }
+        }, { once: true });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black', 'bg-opacity-80', 'shadow-lg');
+                navbar.classList.remove('glass-card', 'border-b-0');
+            } else {
+                navbar.classList.remove('bg-black', 'bg-opacity-80', 'shadow-lg');
+                navbar.classList.add('glass-card', 'border-b-0');
+            }
+        });
+
+        // Toggle Envelope logic
+        function toggleEnvelope() {
+            const envelope = document.getElementById('envelopeWrapper');
+            const instruction = document.getElementById('clickInstruction');
+            
+            envelope.classList.toggle('open');
+            
+            if(envelope.classList.contains('open')) {
+                instruction.style.opacity = '0';
+                // Trigger small confetti when opened
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ['#FFC0CB', '#FF69B4', '#FFFFFF']
+                });
+            } else {
+                instruction.style.opacity = '1';
+                instruction.innerText = "Buka lagi?";
+            }
+        }
+
+        // Surprise Button logic (Canvas Confetti)
+        function triggerSurprise() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                // Launch confetti from left edge
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#FFC0CB', '#FF69B4', '#FFFFFF', '#121212']
+                });
+                // Launch confetti from right edge
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#FFC0CB', '#FF69B4', '#FFFFFF', '#121212']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                } else {
+                    // Final big pop
+                    setTimeout(() => {
+                        confetti({
+                            particleCount: 150,
+                            spread: 100,
+                            origin: { y: 0.5 },
+                            colors: ['#FFC0CB', '#FF69B4', '#FFFFFF']
+                        });
+                    }, 500);
+                }
+            }());
+
+            // Change button text temporarily
+            const btnSpan = document.querySelector('#surpriseBtn span.relative');
+            const originalText = btnSpan.innerHTML;
+            btnSpan.innerHTML = '<i class="fas fa-smile-beam text-2xl"></i> Yey!';
+            
+            setTimeout(() => {
+                btnSpan.innerHTML = originalText;
+            }, 3500);
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
